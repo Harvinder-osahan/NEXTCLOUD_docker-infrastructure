@@ -1,0 +1,28 @@
+version: '2'
+
+volumes:
+  cloudstr:
+  db:
+
+services:
+  db:
+    image: mysql:5.6
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD= redhatroot
+      - MYSQL_PASSWORD= passwd123
+      - MYSQL_DATABASE=cloudb
+      - MYSQL_USER=HD
+
+  ser:
+    image: nextcloud
+    ports:
+      - 1234:80
+    links:
+      - db
+    volumes:
+      - cloudstr:/var/www/html
+    restart: always
